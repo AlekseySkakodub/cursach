@@ -18,23 +18,23 @@ pipeline {
         stage('Check') {
             steps {
                 echo 'Check important app directory'
-                sh "sudo find ./* -name go-rest-api"
+                sh "find ./* -name go-rest-api"
             }
         }
         stage('Change index.html') {
             steps {
                 echo 'Change index.html'
                 script {
-                    writeFile file: './go-rest-api/html/index.html', text: params.INDEX_HTML_CONTENT
+                    writeFile (file: './go-rest-api/html/index.html', text: INDEX_HTML_CONTENT)
                 }
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Build docker image'
-                sh "cd ./go-rest-api && sudo docker build -t go-app:1.3 ."
+                sh "cd ./go-rest-api && docker build -t go-app:1.3 ."
                 echo 'Run docker compose'
-                sh "cd ./go-rest-api && sudo docker compose up -d"
+                sh "cd ./go-rest-api && docker compose down && docker compose up -d"
             }
         }
     }
